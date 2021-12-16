@@ -1,32 +1,12 @@
-#+title: sand
+#+title: Game of tag
 
-* What is this?
+* Features (for now)
 
-Once I was playing Minecraft and thought that it wasn't a game that I liked enough. I wanted a sandbox game that was different. That different would focus on other things and I didnt want this game to become top down terraria. I wanted it to be something else. So here is a list of things I want (and they can change at any time btw).
+- Hunter (aka It) AI
+- Walking controls
 
-** Features I want [0/9]
+* TODO
 
-- [ ] Infinite worlds
-- [ ] Loading a huge area for world simulation
-- [ ] Procedural generation everywhere (so I can be lazy and also the game has more diversity)
-- [ ] Automation at its finest
-- [ ] Intelliegnt NPC with comunities/society
-- [ ] Realistic crafting and building
-  - To build a structure you need to bring and install resources
-- [ ] Dymamic biomes that change based on the climate
-- [ ] Realistic inventory
-  - Items have weight, volume, etc and containers/vehicles have limitations
-
-* How am I going to get there?
-
-** ECS
-
-- ECS :: Entity Compoment System
-
-Why I chose ECS? That is because it promises to be pretty fast and it has a rather simple approach to thigns:
-
-1) Give me a list of all the objects that have certain qualities
-2) Update data on them with a given function
-3) Do the same for another system
-
-This approach may not be the best for some applications, but I think its going to be perfect for prototyping. When you dont know what you will have in the end and not having a defined journey to that end its
+- Runner AI
+- Some maze like map
+- Varoius rules
