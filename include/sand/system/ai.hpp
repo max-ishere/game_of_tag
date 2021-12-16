@@ -1,15 +1,15 @@
 #pragma once
+#include <box2d/b2_math.h>
 #include <entt/entity/fwd.hpp>
-#include <entt/entity/registry.hpp>
-#include <numbers>
-#include <sand/component/ai.hpp>
-#include <sand/component/movement_intent.hpp>
 
-void ProcessAI(entt::registry &registry) {
-  registry.view<AI>().each([&registry](const entt::entity agent) {
-    registry.emplace_or_replace<MovementIntent>(
-        agent, MovementIntent{.angle = static_cast<float>(rand() % 8 *
-                                                          std::numbers::pi / 4),
-                              .velocity = 1});
-  });
-}
+struct HunterAI;
+
+class TickHuntersAI {
+public:
+  unsigned int explore_detection_range{10u},
+      chase_detection_range{explore_detection_range * 2}, tag_range{1u};
+
+  void operator()(entt::registry &);
+};
+
+void TickAIMovementIntent(entt::registry &);

@@ -1,5 +1,6 @@
 add_executable(sand_test
   z_index_test.cpp
+  hunter_ai_test.cpp
   )
 
 include(FetchContent)
@@ -14,6 +15,8 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 target_link_libraries(sand_test
+  PRIVATE sand_system
+  PRIVATE SDL2
   PRIVATE gtest_main
   PRIVATE box2d)
 

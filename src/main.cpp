@@ -1,3 +1,5 @@
+#include "sand/system/ai.hpp"
+#include "sand/system/kbd_control.hpp"
 #include <SDL2/SDL.h>
 #include <box2d/b2_body.h>
 #include <box2d/b2_time_step.h>
@@ -8,6 +10,7 @@
 #include <entt/entity/registry.hpp>
 #include <functional>
 #include <iostream>
+#include <sand/component/ai.hpp>
 #include <sand/component/player_controllable.hpp>
 #include <sand/component/renderer_data.hpp>
 #include <sand/core/timer.hpp>
@@ -22,6 +25,7 @@ int main(int argc, char *argv[]) {
 
   Renderer Renderer;
   Physics Physics;
+  TickHuntersAI TickHuntersAI;
   Renderer.camera_data =
       Renderer::CameraData{.x = 0, .y = 0, .hx_size = 40, .hy_size = 40};
 
@@ -30,6 +34,7 @@ int main(int argc, char *argv[]) {
   const auto player = registry.create();
   MakePhysicsEntity(registry, player, Physics.world);
   registry.emplace<MovementIntent>(player);
+  registry.emplace<HunterTarget>(player);
 
   b2CircleShape character_collider;
   character_collider.m_radius = 0x1p-3;
@@ -42,20 +47,20 @@ int main(int argc, char *argv[]) {
 
   const auto ai_agent = registry.create();
   MakePhysicsEntity(registry, ai_agent, Physics.world);
-  registry.emplace<AI>(ai_agent);
+  registry.emplace<HunterAI>(ai_agent);
 
   b2Body *ai_physics_body = registry.get<b2Body *>(ai_agent);
   ai_physics_body->CreateFixture(&character_collider, 1)->SetFriction(5);
-  ai_physics_body->SetTransform(b2Vec2(-4, 0), 0);
+  ai_physics_body->SetTransform(b2Vec2(4, 0), 0);
   registry.emplace<RendererData>(ai_agent, true,
                                  SpriteData::SpriteId::CharacterFemale, 0.f,
                                  0.5 - character_collider.m_radius);
 
-  auto frame_conter = 0u;
+  auto frame_counter = 0u;
 
   bool quit = false;
   while (!quit) {
-    frame_conter++;
+    frame_counter++;
     Timer timer;
     timer.start();
 
@@ -63,9 +68,13 @@ int main(int argc, char *argv[]) {
 
     registry.emplace_or_replace<MovementIntent>(player,
                                                 HandleEvents(quit, state));
-    if (frame_conter % ((int)fps) == 0)
-      ProcessAI(registry);
+    if (ResetTaggedStatus(registry) and registry.all_of<TargetTagged>(player))
+      registry.erase<TargetTagged>(player);
 
+    if (frame_counter % (int)(fps / 2) == 0) {
+      TickHuntersAI(registry);
+      TickAIMovementIntent(registry);
+    }
     HandleControlIntents(registry);
 
     Physics(registry, 1.f / fps);

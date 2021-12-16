@@ -1,4 +1,5 @@
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keyboard.h>
 #include <SDL2/SDL_scancode.h>
 #include <algorithm>
 #include <box2d/b2_body.h>
@@ -10,6 +11,10 @@
 #include <sand/component/player_controllable.hpp>
 #include <sand/system/kbd_control.hpp>
 #include <type_traits>
+
+bool ResetTaggedStatus(entt::registry &registry) {
+  return SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_TAB];
+}
 
 MovementIntent HandleEvents(bool &quit, HUDstate &state) {
   SDL_Event e;

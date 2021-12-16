@@ -10,7 +10,7 @@ class Renderer {
   SpriteData sprite_data{};
 
 public:
-  constexpr static auto position_to_pixels = 64;
+  constexpr static auto position_to_pixels = 32;
   struct CameraData {
     float x{}, y{}, hx_size{}, hy_size{};
     template <typename T> void operator=(T t) {
